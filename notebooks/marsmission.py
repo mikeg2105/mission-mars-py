@@ -1,3 +1,4 @@
+import math as math
 from enum import Enum
 
 #enumeration for constants
@@ -78,7 +79,6 @@ def setconst():
 class marsmission(object):
 
     const=setconst()
-
     
     def __init__(self, control, state):
         self.control = control
@@ -86,18 +86,26 @@ class marsmission(object):
     
     def __init__(self):        
         control={}
-        control[ctl.DT]=1
+        control[ctl.DT]=float(1)
         control[ctl.NS]=10 
         control[ctl.SINT]=100000
-        control[ctl.FX]=0 #FX FY forces in x and Y direction
-        control[ctl.FY]=0
-        control[ctl.MR]=1  #mass of rocket        
+        control[ctl.FX]=float(0) #FX FY forces in x and Y direction
+        control[ctl.FY]=float(0)
+        control[ctl.MR]=float(1)  #mass of rocket        
         
         state={}
-        state[st.T]=0
-        state[st.XE]=0
-        state[st.YE]=0
-        state[st.VXE]=30000
+        state[st.T]=float(0.0)
+        state[st.XE]=float(0.0)
+        state[st.YE]=float(0.0)
+        state[st.VXE]=float(30000.0)
+        state[st.VYE]=float(30000.0)
+        
+        
+        
+        state[st.X]=float(0.0)
+        state[st.Y]=float(6.3781e6+50000)
+        state[st.VX]=float(9000.0)
+        state[st.VY]=float(0.0)
         
         self.control = control
         self.state = state
@@ -115,28 +123,53 @@ class marsmission(object):
             print(i)
             self.updatestate()
             
-    def dist(x1,y1,x2,y2):
-        sep=(x1-x2)^2+(y1-y2)^2
+    def dist(self,x1,y1,x2,y2):
+        sep=(x1-x2)**2+(y1-y2)**2
         sep=sqrt(sep)
         return sep
     
-    def gravaccel(x,xs,y,ys,ms):
-        
-        gx=1
-        gy=1
+    def gravaccel(self,x,xs,y,ys,ms):
+        #Return gravitational acceleration on body at x,y due to body of mass mds
+        #located at xs,ys        
+        G=6.67e-11; #gravitational constants SI units
+        r2=((x-xs)**2+(y-ys)**2)
+        r=math.sqrt(r2)
+        g=G*ms/r2
+        gx=g*(x-xs)/r
+        gy=g*(y-ys)/r
         
         gravvec=(gx,gy)
         return gravvec
     
-    def orbitalspeed(x1,y1,vx1,vy1,x2,y2,vx2,vy2,mass,consts):
+    def orbitalspeed(self, x1,y1,vx1,vy1,x2,y2,vx2,vy2,mass,const):
         #[speed, relspeed, orbspeed] = orbitalspeed(x1,y1,vx1,vy1,x2,y2,vx2,vy2,mass,consts)
         #%% orbitalspeed
         #%   Object 1 is at x1,y1,vx1,vy1
-        #%   Object 2 is at x2,y2,vx2,vy2
-    
-        speed=1
-        relspeed=1
-        orbspeed=1
+        #%   Object 2 is at x2,y2,vx2,vy2    
+        
+        relspeed=math.sqrt((vx1-vx2)**2+(vy1-vy2)**2);
+        speed=math.sqrt(vx1**2+vx2**2);
+        sep=math.sqrt((x1-x2)**2+(y1-y2)**2);
+
+        orbspeed=const[ cnst.G]*mass/sep;
+        orbspeed=math.sqrt(orbspeed);
         
         orbitalspeed=(speed,relspeed,orbspeed)
         return orbitalspeed
+    
+    def orbitalangle(self,x1,y1,vx1,vy1,x2,y2,vx2,vy2):
+        #function [angle] = orbitalangle(x1,y1,vx1,vy1,x2,y2,vx2,vy2)
+        #%%orbital angle
+        #%  for the rocket around a selected body e.g. sun, moon, earth, mars
+        #%  compute the orbital angle i.e. the angle between the orbital radius
+        #%  vector and the velocity vector
+        #%   Object 1 is at x1,y1,vx1,vy1
+        #%   Object 2 is at x2,y2,vx2,vy2
+
+        dp=(vx1-vx2)*(x1-x2)+(vy1-vy2)*(y1-y2)
+        relspeed=math.sqrt((vx1-vx2)**2+(vy1-vy2)**2)
+        sep=math.sqrt((x1-x2)**2+(y1-y2)**2)
+
+        angle=360*math.acos(dp/(relspeed*sep))/(2*math.pi)
+        
+        return angle
