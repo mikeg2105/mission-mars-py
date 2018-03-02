@@ -65,7 +65,11 @@ def initmarsmission():
     const[ cnst.G]=6.67e-11
     const[cnst.RE]=6.3781e6 
     const[cnst.DE]=2*6.3781e6
-    #5.97237e24, 7.342e22,1.99e30,6.42e23,381.5e6,1.0)
+    const[cnst.ME]=5.97237e24
+    const[cnst.MM]=7.342e22
+    const[cnst.MS]=1.99e30
+    const[cnst.MMARS]=6.42e23
+    const[cnst.DEM]=381.5e6
 	
 	
 	
@@ -117,12 +121,14 @@ def initmarsmission():
 #control.saveinterval=control.nsteps;
 #control.fx=0; %fx and fy force on rocket (thrust from motors)
 #control.fy=0;
-   
-
-    
-    
-    
-    control= (1.0, 2.0)
+#control.mr=1.0; %mass of rocket
+    control={}
+    control(ctl.DT)=1 #time steps
+    control(ctl.NS)=500000 #number of steps
+    control(ctl.SINT)=control(ctl.NS)  #save interval
+    control(ctl.FX)=0 #FX FY forces in x and Y direction
+    control(ctl.FY)=0
+    control(ctl.MR)=1  #mass of rocket
 
     marsmission = (state, control,const)
 

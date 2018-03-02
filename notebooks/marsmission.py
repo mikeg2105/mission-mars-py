@@ -10,7 +10,6 @@ class cnst(Enum):
     MS=5
     MMARS=6
     DEM=7
-    MR=8
 
 #enumeration for state variables
 class st(Enum):
@@ -43,6 +42,7 @@ class ctl(Enum):
     SINT=2   #SAVE INTERVAL
     FX=3    # FORCE X DIRECTION
     FY=4    # FORCE Y DIRECTION
+    MR=5    # rocket mass
     
 def setconst():
 #function [state, const, control]=initmarsmission()
@@ -57,12 +57,16 @@ def setconst():
 #const.ms=1.99e30; %mass sun
 #const.mmars=6.42e23 ; %mass mars
 #const.dem=381.5e6; %average dist moon-earth metres
-#const.mr=1.0; %mass of rocket
+
     const={}
     const[ cnst.G]=6.67e-11
     const[cnst.RE]=6.3781e6 
     const[cnst.DE]=2*6.3781e6
-    #5.97237e24, 7.342e22,1.99e30,6.42e23,381.5e6,1.0)
+    const[cnst.ME]=5.97237e24
+    const[cnst.MM]=7.342e22
+    const[cnst.MS]=1.99e30
+    const[cnst.MMARS]=6.42e23
+    const[cnst.DEM]=381.5e6
     
     return const
     
@@ -80,12 +84,14 @@ class marsmission(object):
         self.control = control
         self.state = state    
     
-    def __init__(self):
-        
+    def __init__(self):        
         control={}
         control[ctl.DT]=1
         control[ctl.NS]=10 
         control[ctl.SINT]=100000
+        control[ctl.FX]=0 #FX FY forces in x and Y direction
+        control[ctl.FY]=0
+        control[ctl.MR]=1  #mass of rocket        
         
         state={}
         state[st.T]=0
