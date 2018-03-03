@@ -1,5 +1,9 @@
 import math as math
+import numpy as np
 from enum import Enum
+from numpy import *
+from os import *
+
 
 #enumeration for constants
 class cnst(Enum):
@@ -84,7 +88,16 @@ class marsmission(object):
         self.control = control
         self.state = state    
     
-    def __init__(self):        
+    def __init__(self, missionfile):
+        status=loadmission(missionfile)
+        if status!=0:            
+            self.setdefaultstate()
+    
+    def __init__(self):
+        self.setdefaultstate()
+
+    
+    def setdefaultstate(self):
         control={}
         control[ctl.DT]=float(1)
         control[ctl.NS]=10 
@@ -95,37 +108,182 @@ class marsmission(object):
         
         state={}
         state[st.T]=float(0.0)
+        
+        #earth
         state[st.XE]=float(0.0)
         state[st.YE]=float(0.0)
         state[st.VXE]=float(30000.0)
-        state[st.VYE]=float(30000.0)
+        state[st.VYE]=float(0.0)
         
+        #moon
+        state[st.XM]=float(381.5e6)
+        state[st.YM]=float(0.0)
+        state[st.VXM]=state[st.VXE]
+        state[st.VYM]=1023.1+state[st.VYE] 
         
+        #sun
+        state[st.XS]=float(0.0)
+        state[st.YS]=float(149.6e9)
+        state[st.VXS]=float(0.0)
+        state[st.VYS]=float(0.0)        
         
+        #rocket
         state[st.X]=float(0.0)
         state[st.Y]=float(6.3781e6+50000)
         state[st.VX]=float(9000.0)
         state[st.VY]=float(0.0)
         
+        #mars
+        state[st.XMA]=float(0.0)
+        state[st.YMA]=float(225.0e9+state[st.YS])
+        state[st.VXMA]=-24130.0
+        state[st.VYMA]=0         
+       
         self.control = control
         self.state = state
         
+    def setstate(self,id,val):
+        self.state[id]=val
+        
+    def setcontrol(self,id,val):
+        self.control[id]=val
+        
+    def getstate(self,id):
+        return self.state[id]
+        
+    def getcontrol(self,id):
+        return self.control[id]
+    
     def updatestate(self):
         #print('hello')
-        self.state[st.XE]=self.state[st.XE]+10
-        print(self.state[st.XE])
+        newstate=self.state
+        #newstate[st.XE]=newstate[st.XE]+10
+        #print(newstate[st.XE])
         #print('goodbye')
+        
+        
+        #update rocket
+        gx=0
+        gy=0
+        #rocket-earth
+        gt=self.gravaccel(newstate[st.X],newstate[st.XE],newstate[st.Y],newstate[st.YE],self.const[cnst.ME]) #earth contrib
+        gx=gx+gt[0];
+        gy=gy+gt[1];        
+        
+        #rocket-moon
+        gt=self.gravaccel(newstate[st.X],newstate[st.XM],newstate[st.Y],newstate[st.YM],self.const[cnst.MM]) #moon contrib
+        gx=gx+gt[0];
+        gy=gy+gt[1];   
+        
+        #%rocket-sun
+        gt=self.gravaccel(newstate[st.X],newstate[st.XS],newstate[st.Y],newstate[st.YS],self.const[cnst.MS]) #sun contrib
+        gx=gx+gt[0];
+        gy=gy+gt[1];
+       
+        #%rocket-mars
+        gt=self.gravaccel(newstate[st.X],newstate[st.XMA],newstate[st.Y],newstate[st.YMA],self.const[cnst.MMARS]) #moon contrib
+        gx=gx+gt[0];
+        gy=gy+gt[1]; 
+                       
+        gx=gx+self.control[ctl.FX]/self.control[ctl.MR]
+        gy=gy+self.control[ctl.FY]/self.control[ctl.MR]
+       
+        #calculate vy
+        newvy=newstate[st.VY]-gy*self.control[ctl.DT];
+        newvx=newstate[st.VX]-gx*self.control[ctl.DT];
+
+        #calculate x and y
+        newstate[st.X]=newstate[st.X]+0.5*(newstate[st.VX]+newvx)*self.control[ctl.DT];
+        newstate[st.Y]=newstate[st.Y]+0.5*(newstate[st.VY]+newvy)*self.control[ctl.DT];
+        
+        #update moon 
+        gx=0
+        gy=0
+        #moon-earth
+        gt=self.gravaccel(newstate[st.XM],newstate[st.XE],newstate[st.YM],newstate[st.YE],self.const[cnst.ME]) #earth contrib
+        gx=gx+gt[0];
+        gy=gy+gt[1]; 
+        
+        #moon-mars
+        gt=self.gravaccel(newstate[st.XM],newstate[st.XMA],newstate[st.YM],newstate[st.YMA],self.const[cnst.MMARS]) #mars contrib
+        gx=gx+gt[0];
+        gy=gy+gt[1];
+        
+        #moon-sun
+        gt=self.gravaccel(newstate[st.XM],newstate[st.XS],newstate[st.YM],newstate[st.YS],self.const[cnst.MS]) #sun contrib
+        gx=gx+gt[0];
+        gy=gy+gt[1]; 
+        
+        #calculate vy
+        newvy=newstate[st.VYM]-gy*self.control[ctl.DT];
+        newvx=newstate[st.VXM]-gx*self.control[ctl.DT];
+          
+        #calculate x and y
+        newstate[st.XM]=newstate[st.XM]+0.5*(newstate[st.VXM]+newvx)*self.control[ctl.DT];
+        newstate[st.YM]=newstate[st.YM]+0.5*(newstate[st.VYM]+newvy)*self.control[ctl.DT];        
+
+        #update mars 
+        gx=0
+        gy=0
+        #mars-earth
+        gt=self.gravaccel(newstate[st.XMA],newstate[st.XE],newstate[st.YMA],newstate[st.YE],self.const[cnst.ME]) #earth contrib
+        gx=gx+gt[0];
+        gy=gy+gt[1]; 
+                
+        #mars-sun
+        gt=self.gravaccel(newstate[st.XMA],newstate[st.XS],newstate[st.YMA],newstate[st.YS],self.const[cnst.MS]) #sun contrib
+        gx=gx+gt[0];
+        gy=gy+gt[1]; 
+        
+        #calculate vy
+        newvy=newstate[st.VYMA]-gy*self.control[ctl.DT];
+        newvx=newstate[st.VXMA]-gx*self.control[ctl.DT];
+          
+        #calculate x and y
+        newstate[st.XMA]=newstate[st.XMA]+0.5*(newstate[st.VXMA]+newvx)*self.control[ctl.DT];
+        newstate[st.YMA]=newstate[st.YMA]+0.5*(newstate[st.VYMA]+newvy)*self.control[ctl.DT];         
+
+        #update earth 
+        gx=0
+        gy=0
+        #earth-moon
+        gt=self.gravaccel(newstate[st.XE],newstate[st.XM],newstate[st.YE],newstate[st.YM],self.const[cnst.MM]) #earth contrib
+        gx=gx+gt[0];
+        gy=gy+gt[1]; 
+        
+        #earth-mars
+        gt=self.gravaccel(newstate[st.XE],newstate[st.XMA],newstate[st.YE],newstate[st.YMA],self.const[cnst.MMARS]) #mars contrib
+        gx=gx+gt[0];
+        gy=gy+gt[1];
+        
+        #earth-sun
+        gt=self.gravaccel(newstate[st.XE],newstate[st.XS],newstate[st.YE],newstate[st.YS],self.const[cnst.MS]) #sun contrib
+        gx=gx+gt[0];
+        gy=gy+gt[1]; 
+        
+        #calculate vy
+        newvy=newstate[st.VYE]-gy*self.control[ctl.DT];
+        newvx=newstate[st.VXE]-gx*self.control[ctl.DT];
+          
+        #calculate x and y
+        newstate[st.XE]=newstate[st.XE]+0.5*(newstate[st.VXE]+newvx)*self.control[ctl.DT];
+        newstate[st.YE]=newstate[st.YE]+0.5*(newstate[st.VYE]+newvy)*self.control[ctl.DT]; 
+        
+        return newstate
         
     def runmission(self):   #playmarsmission
         print('runmission')
         #cycle through the steps and call update
         for i in range(self.control[ctl.NS]):
-            print(i)
-            self.updatestate()
+            #print(i)
+            self.state=self.updatestate()
+            self.state[st.T]=self.state[st.T]+self.control[ctl.DT]
+        currentstate=self.state
+        return currentstate
             
     def dist(self,x1,y1,x2,y2):
         sep=(x1-x2)**2+(y1-y2)**2
-        sep=sqrt(sep)
+        sep=math.sqrt(sep)
         return sep
     
     def gravaccel(self,x,xs,y,ys,ms):
@@ -173,3 +331,41 @@ class marsmission(object):
         angle=360*math.acos(dp/(relspeed*sep))/(2*math.pi)
         
         return angle
+    
+    def savemission(self, filename):
+        status=0
+        fd = open(filename, "w")
+        for mst in st:
+            val=self.state[mst]
+            fouts=repr(val)+' '
+        for mctl in ctl:
+            val=self.control[mctl]
+            fouts=repr(val)+' '
+        fouts=fouts+'\n'
+        print(fouts)
+        fd.write(fouts)
+        fd.close()        
+        return status
+        
+    def loadmission(self, filename):
+        #application which reads columnar data from file
+        #using matplotlib,scipy and numpy
+        #load data from text file
+        ind=0
+        status=0
+        t1a=np.loadtxt(filename)
+        asz=t1a.size
+        t1=t1a[1:asz,0]
+        control={}
+        state={}
+        for mst in st:
+            state[mst]=t1[ind]
+            ind=ind+1
+        for mctl in ctl:
+            control[mctl]=t1[ind]
+            ind=ind+1
+        self.control=control
+        self.state=state
+        return status
+        
+        
