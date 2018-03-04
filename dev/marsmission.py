@@ -99,8 +99,8 @@ class marsmission(object):
     
     def setdefaultstate(self):
         control={}
-        control[ctl.DT]=float(1)
-        control[ctl.NS]=10 
+        control[ctl.DT]=float(3000)
+        control[ctl.NS]=100000 
         control[ctl.SINT]=100000
         control[ctl.FX]=float(0) #FX FY forces in x and Y direction
         control[ctl.FY]=float(0)
@@ -130,8 +130,8 @@ class marsmission(object):
         #rocket
         state[st.X]=float(0.0)
         state[st.Y]=float(6.3781e6+50000)
-        state[st.VX]=float(9000.0)
-        state[st.VY]=float(0.0)
+        state[st.VX]=float(9000.0+state[st.VXE])
+        state[st.VY]=float(0.0+state[st.VYE])
         
         #mars
         state[st.XMA]=float(0.0)
@@ -141,6 +141,9 @@ class marsmission(object):
        
         self.control = control
         self.state = state
+
+    def getallstates(self):
+        return self.state
         
     def setstate(self,id,val):
         self.state[id]=val
