@@ -29,12 +29,14 @@ class rck(Enum):
 def setrocket(numeng, engpower):
     rockprop={}
     rockprop[rck.NE]=numeng #e.g. 4
-    rockprop[rck.EP]=engpower  #e.g.500   
+    rockprop[rck.EP]=engpower  #e.g.500
+    #rockprop[rck.MF]=engpower*numeng
     
     return rockprop
 
 class rocket(object):
     rockprop=setrocket(4,500)
+    payload={}
     mass=1
     
     def __init__(self, payload):
@@ -67,6 +69,7 @@ class rocket(object):
         tmass=tmass+4*(self.payload[payld.FUEL])
         tmass=tmass+0.5*(self.payload[payld.CREW])   
         tmass=tmass+2*(self.payload[payld.ROV])
+        self.mass=tmass
         return tmass
     
     def setmass(self,tmass):

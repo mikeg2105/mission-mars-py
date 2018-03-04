@@ -3,7 +3,7 @@ import numpy as np
 from enum import Enum
 from numpy import *
 from os import *
-
+import rocket as mmr
 
 #enumeration for constants
 class cnst(Enum):
@@ -85,6 +85,8 @@ class marsmission(object):
     const=setconst()
     state={}
     control={}
+    rocket={}
+    maxforce=100000
     
     def __init__(self, control, state):
         self.control = control
@@ -102,6 +104,8 @@ class marsmission(object):
     def __init__(self):
         self.setdefaultstate()
 
+    def setrocket(self, irocket):
+        self.rocket=irocket
     
     def setdefaultstate(self):
         control={}
@@ -163,7 +167,48 @@ class marsmission(object):
         
     def getcontrol(self,id):
         return self.control[id]
-    
+
+    def updaterocket(self):
+        #update the rocket properties
+        self.maxforce=100*self.rocket.rockprop[mmr.rck.NE]*self.rocket.rockprop[mmr.rck.EP] #e.g. 4
+        
+        #how much fuel used
+        fx=self.control[ctl.FX]
+        fy=self.control[ctl.FY]
+        totalf=math.sqrt(fx**2+fy**2)
+        if self.rocket.payload[mmr.payld.FUEL]>0:
+            fuelused=10*self.control[ctl.DT]*totalf*self.rocket.rockprop[mmr.rck.NE]*self.rocket.rockprop[mmr.rck.EP]/self.maxforce        
+            #update fuel remaining
+            self.rocket.payload[mmr.payld.FUEL]=self.rocket.payload[mmr.payld.FUEL]-fuelused
+        else:
+            self.maxforce=0
+        
+        #revise maxforce if not much fuel remaining!
+        fuelremaining=self.rocket.payload[mmr.payld.FUEL]
+        fuelused=10*self.control[ctl.DT]*totalf*self.rocket.rockprop[mmr.rck.NE]*self.rocket.rockprop[mmr.rck.EP]*totalf/self.maxforce
+        if fuelused>fuelremaining:
+                #recalculatemax force
+                self.maxforce=fuelremaining/(10*self.control[ctl.DT]*self.rocket.rockprop[mmr.rck.NE]*self.rocket.rockprop[mmr.rck.EP])
+        
+        
+        #update remaining oxygen
+        self.rocket.payload[mmr.payld.OXY]=self.rocket.payload[mmr.payld.OXY]-0.0001*self.control[ctl.DT]*self.rocket.payload[mmr.payld.CREW]
+        
+        #update water  #plants use water too!
+        self.rocket.payload[mmr.payld.H2O]=self.rocket.payload[mmr.payld.H2O]-0.0001*self.control[ctl.DT]*self.rocket.payload[mmr.payld.CREW]        
+        self.rocket.payload[mmr.payld.H2O]=self.rocket.payload[mmr.payld.H2O]-0.00001*self.control[ctl.DT]*self.rocket.payload[mmr.payld.PLNT]        
+        
+        #update food
+        self.rocket.payload[mmr.payld.FOOD]=self.rocket.payload[mmr.payld.FOOD]-0.0001*self.control[ctl.DT]*self.rocket.payload[mmr.payld.CREW]        
+        
+        #plants make oxygen 
+        self.rocket.payload[mmr.payld.OXY]=self.rocket.payload[mmr.payld.OXY]+0.0001*self.control[ctl.DT]*self.rocket.payload[mmr.payld.PLNT]
+        
+        #plants use water
+        
+        #update mass
+        self.rocket.updatemass()
+        
     def updatestate(self):
         #print('hello')
         newstate=self.state
