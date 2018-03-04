@@ -130,8 +130,8 @@ class marsmission(object):
         #rocket
         state[st.X]=float(0.0)
         state[st.Y]=float(6.3781e6+50000)
-        state[st.VX]=float(9000.0+state[st.VXE])
-        state[st.VY]=float(0.0+state[st.VYE])
+        state[st.VX]=float(90.0+state[st.VXE])
+        state[st.VY]=float(40000.0+state[st.VYE])
         
         #mars
         state[st.XMA]=float(0.0)
@@ -199,6 +199,9 @@ class marsmission(object):
         newstate[st.X]=newstate[st.X]+0.5*(newstate[st.VX]+newvx)*self.control[ctl.DT];
         newstate[st.Y]=newstate[st.Y]+0.5*(newstate[st.VY]+newvy)*self.control[ctl.DT];
         
+        newstate[st.VX]=newvx
+        newstate[st.VY]=newvy
+        
         #update moon 
         gx=0
         gy=0
@@ -223,7 +226,10 @@ class marsmission(object):
           
         #calculate x and y
         newstate[st.XM]=newstate[st.XM]+0.5*(newstate[st.VXM]+newvx)*self.control[ctl.DT];
-        newstate[st.YM]=newstate[st.YM]+0.5*(newstate[st.VYM]+newvy)*self.control[ctl.DT];        
+        newstate[st.YM]=newstate[st.YM]+0.5*(newstate[st.VYM]+newvy)*self.control[ctl.DT]; 
+        
+        newstate[st.VXM]=newvx
+        newstate[st.VYM]=newvy
 
         #update mars 
         gx=0
@@ -244,7 +250,10 @@ class marsmission(object):
           
         #calculate x and y
         newstate[st.XMA]=newstate[st.XMA]+0.5*(newstate[st.VXMA]+newvx)*self.control[ctl.DT];
-        newstate[st.YMA]=newstate[st.YMA]+0.5*(newstate[st.VYMA]+newvy)*self.control[ctl.DT];         
+        newstate[st.YMA]=newstate[st.YMA]+0.5*(newstate[st.VYMA]+newvy)*self.control[ctl.DT];
+
+        newstate[st.VXMA]=newvx
+        newstate[st.VYMA]=newvy         
 
         #update earth 
         gx=0
@@ -271,6 +280,9 @@ class marsmission(object):
         #calculate x and y
         newstate[st.XE]=newstate[st.XE]+0.5*(newstate[st.VXE]+newvx)*self.control[ctl.DT];
         newstate[st.YE]=newstate[st.YE]+0.5*(newstate[st.VYE]+newvy)*self.control[ctl.DT]; 
+        
+        newstate[st.VXE]=newvx
+        newstate[st.VYE]=newvy
         
         return newstate
         
