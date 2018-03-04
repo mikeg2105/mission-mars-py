@@ -31,6 +31,17 @@ def mmquickstart():
 
     print(mm.getallstates())
     
+    rock=mm.rocket
+    
+    print(rock.payload)
+    print(rock.mass)
+    print(rock.rockprop)
+
+    mm.updaterocket()
+    print(rock.payload)
+    print(rock.mass)
+    
+    
     return amm,mm
 
 #amm.startanimation()
