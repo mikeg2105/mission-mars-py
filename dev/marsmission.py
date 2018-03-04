@@ -83,15 +83,21 @@ def setconst():
 class marsmission(object):
 
     const=setconst()
+    state={}
+    control={}
     
     def __init__(self, control, state):
         self.control = control
-        self.state = state    
+        self.state = state
+
+        
+
     
     def __init__(self, missionfile):
         status=loadmission(missionfile)
         if status!=0:            
             self.setdefaultstate()
+
     
     def __init__(self):
         self.setdefaultstate()
@@ -141,6 +147,7 @@ class marsmission(object):
        
         self.control = control
         self.state = state
+
 
     def getallstates(self):
         return self.state

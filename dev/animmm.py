@@ -19,6 +19,10 @@ class animmm(object):
     
         def __init__(self):
             self.mm=mmc.marsmission()
+            
+        #initialise with a world provided   
+        def __init__(self,mm):
+            self.mm=mm
 
         def animater(self, i):
             global satsr
