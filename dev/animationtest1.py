@@ -8,9 +8,9 @@ import marsmission as mmc
 import animmm as mma        #marstest animation class
 
 
-
-amm=mma.animmm()
-mm=amm.getmarsmission()
+mm=mmc.marsmission()
+amm=mma.animmm(mm)
+#mm=amm.getmarsmission()
 
 print(mm.getallstates())
 

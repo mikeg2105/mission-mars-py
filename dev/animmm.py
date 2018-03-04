@@ -27,6 +27,7 @@ class animmm(object):
         def animater(self, i):
             global satsr
             newstate=self.mm.updatestate()
+            self.mm.updaterocket()
             self.mm.state[mmc.st.T]=self.mm.state[mmc.st.T]+self.mm.control[mmc.ctl.DT]
             self.mm.state=newstate
             

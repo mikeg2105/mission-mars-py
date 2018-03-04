@@ -202,7 +202,7 @@ class marsmission(object):
         self.rocket.payload[mmr.payld.FOOD]=self.rocket.payload[mmr.payld.FOOD]-0.0001*self.control[ctl.DT]*self.rocket.payload[mmr.payld.CREW]        
         
         #plants make oxygen 
-        self.rocket.payload[mmr.payld.OXY]=self.rocket.payload[mmr.payld.OXY]+0.0001*self.control[ctl.DT]*self.rocket.payload[mmr.payld.PLNT]
+        self.rocket.payload[mmr.payld.OXY]=self.rocket.payload[mmr.payld.OXY]+0.000005*self.control[ctl.DT]*self.rocket.payload[mmr.payld.PLNT]
         
         #plants use water
         
