@@ -141,7 +141,8 @@ class marsmission(object):
         state[st.X]=float(0.0)
         state[st.Y]=float(6.3781e6+50000)
         state[st.VX]=float(90.0+state[st.VXE])
-        state[st.VY]=float(40000.0+state[st.VYE])
+        #state[st.VY]=float(40000.0+state[st.VYE])
+        state[st.VY]=float(13000.0+state[st.VYE])
         
         #mars
         state[st.XMA]=float(0.0)
@@ -186,23 +187,23 @@ class marsmission(object):
         #revise maxforce if not much fuel remaining!
         fuelremaining=self.rocket.payload[mmr.payld.FUEL]
         fuelused=10*self.control[ctl.DT]*totalf*self.rocket.rockprop[mmr.rck.NE]*self.rocket.rockprop[mmr.rck.EP]*totalf/self.maxforce
-        if fuelused>fuelremaining:
+        if (fuelused>fuelremaining) & (self.control[ctl.DT]>0):
                 #recalculatemax force
                 self.maxforce=fuelremaining/(10*self.control[ctl.DT]*self.rocket.rockprop[mmr.rck.NE]*self.rocket.rockprop[mmr.rck.EP])
         
         
         #update remaining oxygen
-        self.rocket.payload[mmr.payld.OXY]=self.rocket.payload[mmr.payld.OXY]-0.0001*self.control[ctl.DT]*self.rocket.payload[mmr.payld.CREW]
+        self.rocket.payload[mmr.payld.OXY]=self.rocket.payload[mmr.payld.OXY]-0.0000001*self.control[ctl.DT]*self.rocket.payload[mmr.payld.CREW]
         
         #update water  #plants use water too!
-        self.rocket.payload[mmr.payld.H2O]=self.rocket.payload[mmr.payld.H2O]-0.0001*self.control[ctl.DT]*self.rocket.payload[mmr.payld.CREW]        
-        self.rocket.payload[mmr.payld.H2O]=self.rocket.payload[mmr.payld.H2O]-0.00001*self.control[ctl.DT]*self.rocket.payload[mmr.payld.PLNT]        
+        self.rocket.payload[mmr.payld.H2O]=self.rocket.payload[mmr.payld.H2O]-0.0000001*self.control[ctl.DT]*self.rocket.payload[mmr.payld.CREW]        
+        self.rocket.payload[mmr.payld.H2O]=self.rocket.payload[mmr.payld.H2O]-0.00000001*self.control[ctl.DT]*self.rocket.payload[mmr.payld.PLNT]        
         
         #update food
-        self.rocket.payload[mmr.payld.FOOD]=self.rocket.payload[mmr.payld.FOOD]-0.0001*self.control[ctl.DT]*self.rocket.payload[mmr.payld.CREW]        
+        self.rocket.payload[mmr.payld.FOOD]=self.rocket.payload[mmr.payld.FOOD]-0.00000001*self.control[ctl.DT]*self.rocket.payload[mmr.payld.CREW]        
         
         #plants make oxygen 
-        self.rocket.payload[mmr.payld.OXY]=self.rocket.payload[mmr.payld.OXY]+0.000005*self.control[ctl.DT]*self.rocket.payload[mmr.payld.PLNT]
+        self.rocket.payload[mmr.payld.OXY]=self.rocket.payload[mmr.payld.OXY]+0.00000001*self.control[ctl.DT]*self.rocket.payload[mmr.payld.PLNT]
         
         #plants use water
         

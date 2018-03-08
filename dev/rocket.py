@@ -18,7 +18,8 @@ class payld(Enum):
     HAB=4
     FUEL=5
     CREW=6
-    ROV=7  #MARS ROVER 
+    ROV=7  #MARS ROVER
+    EXTRAS=8
     
 #enumeration for rocket properties   
 class rck(Enum):
@@ -46,14 +47,15 @@ class rocket(object):
         
     def __init__(self):
         payload = {}
-        payload[payld.OXY]=10
-        payload[payld.H2O]=10
-        payload[payld.FOOD]=10
-        payload[payld.PLNT]=10
+        payload[payld.OXY]=100
+        payload[payld.H2O]=100
+        payload[payld.FOOD]=100
+        payload[payld.PLNT]=50
         payload[payld.HAB]=2
-        payload[payld.FUEL]=10000
+        payload[payld.FUEL]=100000
         payload[payld.CREW]=3
         payload[payld.ROV]=1
+        payload[payld.EXTRAS]=50
         
         self.payload=payload
         tmass=self.updatemass()
@@ -66,9 +68,10 @@ class rocket(object):
         tmass=tmass+3*(self.payload[payld.FOOD])
         tmass=tmass+4*(self.payload[payld.PLNT])
         tmass=tmass+3*(self.payload[payld.HAB])   
-        tmass=tmass+4*(self.payload[payld.FUEL])
+        tmass=tmass+8*(self.payload[payld.FUEL])
         tmass=tmass+0.5*(self.payload[payld.CREW])   
-        tmass=tmass+2*(self.payload[payld.ROV])
+        tmass=tmass+6*(self.payload[payld.ROV])
+        tmass=tmass+3*(self.payload[payld.ROV])
         self.mass=tmass
         return tmass
     

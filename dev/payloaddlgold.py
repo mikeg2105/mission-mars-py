@@ -27,7 +27,7 @@ class Ui_Dialog(object):
         self.buttonBox.rejected.connect(Dialog.reject)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 		
-	def setmm(self, mm,mr):
+    def setmm(self, mm,mr):
         self.mm=mm
         self.mr=mr
 

@@ -7,7 +7,11 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-import payloaddlg as pldlg
+import payloaddlg as pldlg    #rocket payload dialog
+import rpropertiesdlg as rprdlg   #rocket properties dialog
+import opropanglesdlg as oangdlg  #orbit properties angle dialog
+import opropspeeddlg as ospedlg  #orbit properties speed dialog
+import opropdistdlg as odstdlg  #orbit properties dist dialog
 import marsmission as mmc
 import animmm as mma        #marstest animation class
 import rocket as mmr
@@ -234,7 +238,7 @@ class Ui_MainWindow(object):
         self.pb_sim_stop.setText(_translate("MainWindow", "Stop"))
         self.pb_sim_updatestate.setText(_translate("MainWindow", "UpdateState"))
         self.groupBox_3.setTitle(_translate("MainWindow", "Time"))
-        self.label.setText(_translate("MainWindow", "Time (hours)"))
+        self.label.setText(_translate("MainWindow", "Time (days)"))
         self.label_2.setText(_translate("MainWindow", "Time Step (sec)"))
         self.label_3.setText(_translate("MainWindow", "Save Interval"))
         self.groupBox_4.setTitle(_translate("MainWindow", "Satellite Co-ordinates"))
@@ -334,15 +338,38 @@ class Ui_MainWindow(object):
 
     def actiondistance_clicked(self):
             print('actiondistance_clicked clicked')
+            Dialog = QtWidgets.QDialog()
+            ui = odstdlg.Ui_Dialog()
+            ui.setupUi(Dialog)
+            ui.setmm(self.mm, self.mr,self.sat_select)
+            #Dialog.show()
+            Dialog.exec_()
             
     def actionspeeds_clicked(self):
             print('actionspeeds_clicked clicked')
+            Dialog = QtWidgets.QDialog()
+            ui = ospedlg.Ui_Dialog()
+            ui.setupUi(Dialog)
+            ui.setmm(self.mm, self.mr,self.sat_select)
+            #Dialog.show()
+            Dialog.exec_()
             
     def actionangles_clicked(self):
             print('actionangles_clicked clicked')
+            Dialog = QtWidgets.QDialog()
+            ui = oangdlg.Ui_Dialog()
+            ui.setupUi(Dialog)
+            ui.setmm(self.mm, self.mr,self.sat_select)
+            #Dialog.show()
+            Dialog.exec_()
             
     def actionproperties_clicked(self):
             print('actionproperties_clicked clicked')
+            Dialog = QtWidgets.QDialog()
+            ui = rprdlg.Ui_Dialog()
+            ui.setupUi(Dialog)
+            #Dialog.show()
+            Dialog.exec_()
             
     def actionpayload_clicked(self):
             print('actionpayload_clicked clicked')
@@ -351,6 +378,7 @@ class Ui_MainWindow(object):
             Dialog = QtWidgets.QDialog()
             ui = pldlg.Ui_Dialog()
             ui.setupUi(Dialog)
+            ui.setmm(self.mm, self.mr)
             #Dialog.show()
             Dialog.exec_()
             

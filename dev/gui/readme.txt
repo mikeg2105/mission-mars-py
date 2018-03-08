@@ -17,3 +17,16 @@ shows how the handlers are set up for the men actions and the buttons/
 also how we can set the text boxes
 
 and get text from the text boxes
+
+Custom Dialogs
+menuitem                    dialog
+
+rocket->payload             payloaddialog.dlg
+rocket->properties          rpropertiesdialog.dlg
+
+orbitproperties->distance   opropdistdialog.dlg
+orbitproperties->speed      opropspeeddialog.dlg
+orbitproperties->angles     opropanglesdialog.dlg
+
+
+

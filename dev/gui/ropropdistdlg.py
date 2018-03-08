@@ -1,18 +1,14 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'payloaddlg.ui'
+# Form implementation generated from reading ui file 'opropdistdlg.ui'
 #
 # Created by: PyQt5 UI code generator 5.6
 #
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-import marsmission as mmc
-import rocket as mmr
 
 class Ui_Dialog(object):
-    mm=[]
-    mr=[]
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(400, 300)
@@ -26,14 +22,10 @@ class Ui_Dialog(object):
         self.buttonBox.accepted.connect(Dialog.accept)
         self.buttonBox.rejected.connect(Dialog.reject)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
-		
-	def setmm(self, mm,mr):
-        self.mm=mm
-        self.mr=mr
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Payload"))
+        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
 
 
 if __name__ == "__main__":

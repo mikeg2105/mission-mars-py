@@ -96,28 +96,8 @@ class Ui_Dialog(object):
 
     def setmm(self, mm,mr):
         self.mm=mm
-        self.mr=mr
-        
-        var=mr.payload[mmr.payld.OXY]
-        self.txted_o2.setText(str(format(var,'.3f')))		
-        var=mr.payload[mmr.payld.H2O]
-        self.txted_h20.setText(str(format(var,'.3f')))	
-        var=mr.payload[mmr.payld.FOOD]
-        self.txted_food.setText(str(format(var,'.3f')))
-        var=mr.payload[mmr.payld.PLNT]
-        self.txted_plant.setText(str(format(var,'.3f')))
-        var=mr.payload[mmr.payld.HAB]
-        self.txted_habitat.setText(str(format(var,'.3f')))        
-        var=mr.payload[mmr.payld.CREW]
-        self.txted_crew.setText(str(format(var,'.3f')))        
-        var=mr.payload[mmr.payld.ROV]
-        self.txted_rover.setText(str(format(var,'.3f'))) 
-        var=mr.payload[mmr.payld.FUEL]
-        self.txted_fuel.setText(str(format(var,'.3f'))) 
-        var=mr.payload[mmr.payld.EXTRAS]
-        self.txted_extras.setText(str(format(var,'.3f')))        
-   
-        
+        self.mr=mr		
+		
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Payload"))
