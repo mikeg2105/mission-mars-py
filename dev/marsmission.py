@@ -179,7 +179,7 @@ class marsmission(object):
         fy=self.control[ctl.FY]
         totalf=math.sqrt(fx**2+fy**2)
         if self.rocket.payload[mmr.payld.FUEL]>0:
-            fuelused=10*self.control[ctl.DT]*totalf*self.rocket.rockprop[mmr.rck.NE]*self.rocket.rockprop[mmr.rck.EP]/self.maxforce        
+            fuelused=0.0000001*self.control[ctl.DT]*totalf*self.rocket.rockprop[mmr.rck.NE]*self.rocket.rockprop[mmr.rck.EP]/self.maxforce        
             #update fuel remaining
             self.rocket.payload[mmr.payld.FUEL]=self.rocket.payload[mmr.payld.FUEL]-fuelused
         else:
@@ -241,7 +241,9 @@ class marsmission(object):
         gt=self.gravaccel(newstate[st.X],newstate[st.XMA],newstate[st.Y],newstate[st.YMA],self.const[cnst.MMARS]) #moon contrib
         gx=gx+gt[0];
         gy=gy+gt[1]; 
-                       
+
+        massr=self.rocket.updatemass()
+        self.control[ctl.MR]=massr                       
         gx=gx+self.control[ctl.FX]/self.control[ctl.MR]
         gy=gy+self.control[ctl.FY]/self.control[ctl.MR]
        
@@ -435,7 +437,7 @@ class marsmission(object):
         status=0
         t1a=np.loadtxt(filename)
         asz=t1a.size
-        t1=t1a[1:asz,0]
+        t1=t1a[0:asz]
         control={}
         state={}
         rockprop={}

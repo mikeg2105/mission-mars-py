@@ -36,7 +36,7 @@ def setrocket(numeng, engpower):
     return rockprop
 
 class rocket(object):
-    rockprop=setrocket(4,500)
+    rockprop=setrocket(12,250000)
     payload={}
     mass=1
     

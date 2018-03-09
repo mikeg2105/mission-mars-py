@@ -65,7 +65,7 @@ class Ui_Dialog(object):
         Dialog.setWindowTitle(_translate("Dialog", "Rocket Properties"))
         self.groupBox.setTitle(_translate("Dialog", "Rocket Properties"))
         self.label.setText(_translate("Dialog", "Mass"))
-        self.label_2.setText(_translate("Dialog", "kg"))
+        self.label_2.setText(_translate("Dialog", "Mg"))
         self.label_3.setText(_translate("Dialog", "km/s"))
         self.label_4.setText(_translate("Dialog", "Number of Rockets"))
         self.label_5.setText(_translate("Dialog", "N"))
@@ -76,7 +76,7 @@ class Ui_Dialog(object):
         self.mr=mr
         
         mass=mr.updatemass()
-        self.txted_mass.setText(str(format(mass,'.3f')))		
+        self.txted_mass.setText(str(format(mass/1000,'.3f')))		
         var=mr.rockprop[mmr.rck.NE]
         self.txted_nrock.setText(str(format(var,'.3f')))	
         var=mr.rockprop[mmr.rck.EP]

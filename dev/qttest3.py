@@ -20,8 +20,8 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(593, 584)
-        self.infile="infile.dat"
-        self.outfile="outfile.txt"
+        self.infile="mmdata.txt"
+        self.outfile="mmdata.txt"
         self.mm=mmc.marsmission()
         self.mr=mmr.rocket()
 
@@ -253,8 +253,8 @@ class Ui_MainWindow(object):
         self.label_11.setText(_translate("MainWindow", "km/s"))
         self.label_12.setText(_translate("MainWindow", "Fx"))
         self.label_13.setText(_translate("MainWindow", "Fy"))
-        self.label_14.setText(_translate("MainWindow", "N"))
-        self.label_15.setText(_translate("MainWindow", "N"))
+        self.label_14.setText(_translate("MainWindow", "kN"))
+        self.label_15.setText(_translate("MainWindow", "kN"))
         self.menuFile.setTitle(_translate("MainWindow", "File"))
         self.menuSimulation.setTitle(_translate("MainWindow", "Simulation"))
         self.menuOrbitProperties.setTitle(_translate("MainWindow", "OrbitProperties"))
@@ -278,8 +278,8 @@ class Ui_MainWindow(object):
 		
     def pb_sim_updatestate_clicked(self):
             print('updatestate clicked')
-            self.mm.control[mmc.ctl.FX]=float(self.txted_fx.toPlainText())
-            self.mm.control[mmc.ctl.FY]=float(self.txted_fy.toPlainText())
+            self.mm.control[mmc.ctl.FX]=1000*float(self.txted_fx.toPlainText())
+            self.mm.control[mmc.ctl.FY]=1000*float(self.txted_fy.toPlainText())
             
             self.mm.control[mmc.ctl.DT]=float(self.txted_timestep.toPlainText())
             self.mm.control[mmc.ctl.SINT]=float(self.txted_saveinterval.toPlainText())
