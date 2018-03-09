@@ -439,8 +439,8 @@ class Ui_MainWindow(object):
             self.txted_y.setText(str(format(yc,'.3f')))
             self.txted_vx.setText(str(format(vxc,'.3f')))
             self.txted_vy.setText(str(format(vyc,'.3f')))
-            self.txted_fx.setText(str(format(fxc,'.3f')))
-            self.txted_fy.setText(str(format(fyc,'.3f')))
+            self.txted_fx.setText(str(format(fxc/1000,'.3f')))
+            self.txted_fy.setText(str(format(fyc/1000,'.3f')))
             
             
             
