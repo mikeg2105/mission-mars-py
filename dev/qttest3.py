@@ -20,7 +20,8 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(593, 584)
-        
+        self.infile="infile.dat"
+        self.outfile="outfile.txt"
         self.mm=mmc.marsmission()
         self.mr=mmr.rocket()
 
@@ -314,9 +315,11 @@ class Ui_MainWindow(object):
             
     def actionopen_clicked(self):
             print('actionopen_clicked clicked')
+            self.mm.loadmission(self.infile)
             
     def actionsave_clicked(self):
             print('actionsave_clicked clicked')
+            self.mm.savemission(self.outfile)
             
     def actioninitialise_clicked(self):
             print('actioninitialise_clicked clicked') 
@@ -339,7 +342,7 @@ class Ui_MainWindow(object):
     def actiondistance_clicked(self):
             print('actiondistance_clicked clicked')
             Dialog = QtWidgets.QDialog()
-            ui = odstdlg.Ui_Dialog()
+            ui = odstdlg.Ui_Distance()
             ui.setupUi(Dialog)
             ui.setmm(self.mm, self.mr,self.sat_select)
             #Dialog.show()
@@ -357,7 +360,7 @@ class Ui_MainWindow(object):
     def actionangles_clicked(self):
             print('actionangles_clicked clicked')
             Dialog = QtWidgets.QDialog()
-            ui = oangdlg.Ui_Dialog()
+            ui = oangdlg.Ui_OrbitalAngle()
             ui.setupUi(Dialog)
             ui.setmm(self.mm, self.mr,self.sat_select)
             #Dialog.show()
@@ -368,6 +371,7 @@ class Ui_MainWindow(object):
             Dialog = QtWidgets.QDialog()
             ui = rprdlg.Ui_Dialog()
             ui.setupUi(Dialog)
+            ui.setmm(self.mm, self.mr)
             #Dialog.show()
             Dialog.exec_()
             

@@ -80,7 +80,7 @@ class Ui_Distance(object):
             xc=0.0
             yc=0.0
             
-        sep=mm.dist(xc, self.mm.state[mmc.st.X] ,yc, self.mm.state[mmc.st.Y])/1.0e6
+        sep=mm.dist(xc, yc, self.mm.state[mmc.st.X] , self.mm.state[mmc.st.Y])/1.0e6
         self.txted_sat.setText(sat_select)	
         self.txted_dist.setText(str(format(sep,'.3f')))	
 

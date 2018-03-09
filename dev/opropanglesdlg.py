@@ -101,7 +101,7 @@ class Ui_OrbitalAngle(object):
             vxc=0.0
             vyc=0.0
 
-        orbangle=mm.orbitalangle(self.mm.state[mmc.st.X],self.mm.state[mmc.st.Y], self.mm.state[mmc.st.VX], self.mm.state[mmc.st.VY],mass,xc,yc,vxc,vyc)
+        orbangle=mm.orbitalangle(self.mm.state[mmc.st.X],self.mm.state[mmc.st.Y], self.mm.state[mmc.st.VX], self.mm.state[mmc.st.VY],xc,yc,vxc,vyc)
         self.txted_sat.setText(sat_select)	
         self.txted_angle.setText(str(format(orbangle,'.3f')))
 
