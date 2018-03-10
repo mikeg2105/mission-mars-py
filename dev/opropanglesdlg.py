@@ -100,10 +100,10 @@ class Ui_OrbitalAngle(object):
             yc=0.0
             vxc=0.0
             vyc=0.0
-
-        orbangle=mm.orbitalangle(self.mm.state[mmc.st.X],self.mm.state[mmc.st.Y], self.mm.state[mmc.st.VX], self.mm.state[mmc.st.VY],xc,yc,vxc,vyc)
-        self.txted_sat.setText(sat_select)	
-        self.txted_angle.setText(str(format(orbangle,'.3f')))
+        if sat_select != 'rocket':
+            orbangle=mm.orbitalangle(self.mm.state[mmc.st.X],self.mm.state[mmc.st.Y], self.mm.state[mmc.st.VX], self.mm.state[mmc.st.VY],xc,yc,vxc,vyc)
+            self.txted_sat.setText(sat_select)	
+            self.txted_angle.setText(str(format(orbangle,'.3f')))
 
 
 

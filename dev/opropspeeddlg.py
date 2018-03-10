@@ -126,11 +126,13 @@ class Ui_Dialog(object):
             vyc=0.0
 
         orbspeed={}
-        orbspeed=mm.orbitalspeed(self.mm.state[mmc.st.X],self.mm.state[mmc.st.Y], self.mm.state[mmc.st.VX], self.mm.state[mmc.st.VY],xc,yc,vxc,vyc,mass)
-        self.txted_sat.setText(sat_select)	
-        self.txted_speed.setText(str(format(orbspeed[0]/1e3,'.3f')))
-        self.txted_orbspeed.setText(str(format(orbspeed[1]/1e3,'.3f')))
-        self.txted_relspeed.setText(str(format(orbspeed[2]/1e3,'.3f')))
+        
+        if sat_select != 'rocket':
+            orbspeed=mm.orbitalspeed(self.mm.state[mmc.st.X],self.mm.state[mmc.st.Y], self.mm.state[mmc.st.VX], self.mm.state[mmc.st.VY],xc,yc,vxc,vyc,mass)
+            self.txted_sat.setText(sat_select)	
+            self.txted_speed.setText(str(format(orbspeed[0]/1e3,'.3f')))
+            self.txted_orbspeed.setText(str(format(orbspeed[1]/1e3,'.3f')))
+            self.txted_relspeed.setText(str(format(orbspeed[2]/1e3,'.3f')))
 
 if __name__ == "__main__":
     import sys
